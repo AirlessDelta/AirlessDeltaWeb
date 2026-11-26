@@ -27,26 +27,59 @@ export default function Contacto({ modeloPrecargado, onMostrarToast }) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [ultimoEnvio, setUltimoEnvio] = useState(0);
+
+  // Sanitizador anti-XSS y limitador de longitud de carga útil
+  const sanitize = (str) => {
+    if (typeof str !== 'string') return '';
+    return str.replace(/[<>]/g, '').trim().slice(0, 500);
+  };
+
   const validate = () => {
     const errs = {};
-    if (!formData.nombre.trim()) errs.nombre = 'El nombre es obligatorio.';
-    if (!formData.email.trim()) {
+    const nombreLimpio = sanitize(formData.nombre);
+    const emailLimpio = sanitize(formData.email);
+    const telefonoLimpio = sanitize(formData.telefono);
+
+    if (!nombreLimpio) {
+      errs.nombre = 'El nombre es obligatorio.';
+    } else if (nombreLimpio.length < 3) {
+      errs.nombre = 'Ingrese un nombre válido (mínimo 3 caracteres).';
+    }
+
+    if (!emailLimpio) {
       errs.email = 'El correo electrónico es obligatorio.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailLimpio)) {
       errs.email = 'Ingrese un formato de correo válido (ej: nombre@dominio.com).';
     }
-    if (!formData.telefono.trim()) errs.telefono = 'El teléfono o WhatsApp es obligatorio para enviarle la cotización.';
+
+    if (!telefonoLimpio) {
+      errs.telefono = 'El teléfono o WhatsApp es obligatorio para enviarle la cotización.';
+    } else if (!/^[0-9+\s()-]{7,20}$/.test(telefonoLimpio)) {
+      errs.telefono = 'Ingrese un número telefónico válido (ej: +503 7000-0000).';
+    }
+
     return errs;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.honeypot) return; // Honeypot anti-bot
+    if (formData.honeypot) return; // Honeypot anti-bot silencioso
+
+    // Rate limiting defensivo (cooldown de 3 segundos entre envíos)
+    const ahora = Date.now();
+    if (ahora - ultimoEnvio < 3000) {
+      if (onMostrarToast) {
+        onMostrarToast('Por favor espere un momento antes de enviar otra solicitud.', 'info');
+      }
+      return;
+    }
 
     const errs = validate();
     setErrors(errs);
 
     if (Object.keys(errs).length === 0) {
+      setUltimoEnvio(ahora);
       setIsSubmitting(true);
       setTimeout(() => {
         setIsSubmitting(false);
@@ -59,8 +92,13 @@ export default function Contacto({ modeloPrecargado, onMostrarToast }) {
   };
 
   const handleWhatsAppDirecto = () => {
-    const texto = `Hola Grupo Partes El Salvador, deseo cotizar el equipo: ${formData.equipoInteres}. Material a aplicar: ${formData.tipoMaterial}. Nombre: ${formData.nombre || 'Interesado'}.`;
-    window.open(`https://wa.me/${empresa.whatsappClean}?text=${encodeURIComponent(texto)}`, '_blank');
+    const ahora = Date.now();
+    if (ahora - ultimoEnvio < 2000) return;
+    setUltimoEnvio(ahora);
+
+    const nombreLimpio = sanitize(formData.nombre) || 'Interesado';
+    const texto = `Hola Grupo Partes El Salvador, deseo cotizar el equipo: ${formData.equipoInteres}. Material a aplicar: ${formData.tipoMaterial}. Nombre: ${nombreLimpio}.`;
+    window.open(`https://wa.me/${empresa.whatsappClean}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener,noreferrer');
   };
 
   return (

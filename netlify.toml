@@ -11,3 +11,43 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# ====================================================
+# BLINDAJE DE SEGURIDAD INDUSTRIAL (OWASP TOP 10)
+# ====================================================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Anti-Clickjacking: Prohibe cargar el portal en iframes no autorizados
+    X-Frame-Options = "DENY"
+
+    # Anti-Sniffing: Obliga al navegador a respetar estrictamente los tipos MIME
+    X-Content-Type-Options = "nosniff"
+
+    # Anti-XSS para navegadores compatibles
+    X-XSS-Protection = "1; mode=block"
+
+    # Privacidad y defensa contra filtrado de rutas internas
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Bloqueo total de APIs de hardware sensibles (Cámara, micrófono, sensores)
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=()"
+
+    # HSTS: Fuerza túnel seguro HTTPS estricto con subdominios
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+    # Content Security Policy (CSP): Cero inyecciones de scripts de terceros no confiables
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://*.netlify.app; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://wa.me;"
+
+# Caché inmutable para activos estáticos (Vite bundles con hash)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache-Control para HTML principal para forzar revalidación inmediata
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+

@@ -7,22 +7,30 @@ const STORAGE_KEY = 'delta_cotizacion_cart_v1';
 const CLIENT_STORAGE_KEY = 'delta_cotizacion_cliente_v1';
 
 /**
- * Función pura para estructurar el mensaje de cotización para WhatsApp
+ * Función pura para estructurar el mensaje de cotización para WhatsApp con sanitización anti-inyección
  */
 export function formatWhatsAppQuotation(items, clienteInfo = {}) {
   const separador = '---------------------------------';
   const totalItems = items.reduce((acc, it) => acc + (it.cantidad || 1), 0);
+
+  // Sanitizador defensivo contra inyecciones y caracteres de control maliciosos
+  const clean = (val) => (typeof val === 'string' ? val.replace(/[<>\u0000-\u001F\u007F-\u009F]/g, '').trim().slice(0, 300) : '');
 
   let msg = `*SOLICITUD DE COTIZACIÓN FORMAL*\n`;
   msg += `*DELTA INDUSTRIAL SPRAY MACHINES*\n`;
   msg += `Distribuidor: GRUPO PARTES EL SALVADOR\n`;
   msg += `${separador}\n\n`;
 
-  if (clienteInfo.nombre || clienteInfo.empresa || clienteInfo.ubicacion) {
+  const nombreLimpio = clean(clienteInfo.nombre);
+  const empresaLimpia = clean(clienteInfo.empresa);
+  const ubicacionLimpia = clean(clienteInfo.ubicacion);
+  const notasLimpias = clean(clienteInfo.notas);
+
+  if (nombreLimpio || empresaLimpia || ubicacionLimpia) {
     msg += `*DATOS DEL SOLICITANTE:*\n`;
-    if (clienteInfo.nombre) msg += `• *Contacto:* ${clienteInfo.nombre.trim()}\n`;
-    if (clienteInfo.empresa) msg += `• *Empresa / Proyecto:* ${clienteInfo.empresa.trim()}\n`;
-    if (clienteInfo.ubicacion) msg += `• *Ubicación:* ${clienteInfo.ubicacion.trim()}\n`;
+    if (nombreLimpio) msg += `• *Contacto:* ${nombreLimpio}\n`;
+    if (empresaLimpia) msg += `• *Empresa / Proyecto:* ${empresaLimpia}\n`;
+    if (ubicacionLimpia) msg += `• *Ubicación:* ${ubicacionLimpia}\n`;
     msg += `\n`;
   }
 
@@ -169,6 +177,8 @@ export function CartProvider({ children, onMostrarToast }) {
 
   const generarMensajeWhatsApp = () => formatWhatsAppQuotation(items, clienteInfo);
 
+  const [ultimoEnvioWa, setUltimoEnvioWa] = useState(0);
+
   const enviarWhatsApp = () => {
     if (items.length === 0) {
       if (onMostrarToast) {
@@ -176,6 +186,11 @@ export function CartProvider({ children, onMostrarToast }) {
       }
       return;
     }
+
+    // Rate-limiting defensivo contra spam (2 segundos de cooldown)
+    const ahora = Date.now();
+    if (ahora - ultimoEnvioWa < 2000) return;
+    setUltimoEnvioWa(ahora);
 
     const texto = encodeURIComponent(generarMensajeWhatsApp());
     const url = `https://wa.me/${deltaData.empresa.whatsappClean}?text=${texto}`;
