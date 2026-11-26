@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.git/
+.netlify/
+CATALOGO DELTA AIRLESS.pdf
+FICHA TECNICA NUEVA LINEA DELTA 2027.pdf
+*.log

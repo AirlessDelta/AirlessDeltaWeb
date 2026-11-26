@@ -1,0 +1,351 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ==========================================================================
+     PALETA CURADA COOLORS · SISTEMA DE DISEÑO HALLMARK & META ASTRYX
+     Alta precisión industrial, contraste certificado WCAG AAA / AA
+     ========================================================================== */
+  
+  /* Primario: Azul Cobalto de Precisión (Heavy Machinery / Graco Standard) */
+  --color-primary: #1E40AF;
+  --color-primary-hover: #172554;
+  --color-primary-light: #3B82F6;
+  --color-primary-subtle: #EFF6FF;
+
+  /* Superficies Profundas: Slate Navy & Carcasa Mecánica */
+  --color-navy: #0F172A;
+  --color-navy-deep: #020617;
+  --color-navy-card: #1E293B;
+
+  /* Superficies Claras: Papel Técnico & Paneles */
+  --color-paper: #F8FAFC;
+  --color-panel: #F1F5F9;
+  --color-surface-white: #FFFFFF;
+
+  /* Rejilla y Líneas Técnicas: Acero Mecanizado (Bordes nítidos 1px) */
+  --color-line: #CBD5E1;
+  --color-line-soft: #E2E8F0;
+  --color-line-crisp: #94A3B8;
+
+  /* Tipografía y Lectura de Alta Densidad */
+  --color-text-main: #0F172A;
+  --color-text-muted: #475569;
+  --color-text-dim: #94A3B8;
+
+  /* Acento de Seguridad / Alta Presión (PSI Warning): Ámbar Industrial */
+  --color-amber-alert: #D97706;
+  --color-amber-bg: #FEF3C7;
+
+  /* Canal B2B WhatsApp Oficial (Contraste AA / Cero Verde Neón) */
+  --color-whatsapp: #15803D;
+  --color-whatsapp-hover: #166534;
+
+  /* Aliases para compatibilidad con código existente */
+  --blue: var(--color-primary);
+  --blue-hover: var(--color-primary-hover);
+  --navy: var(--color-navy);
+  --navy-deep: var(--color-navy-deep);
+  --navy-card: var(--color-navy-card);
+  --blue-light: var(--color-primary-light);
+  --paper: var(--color-paper);
+  --panel: var(--color-panel);
+  --line: var(--color-line);
+  --line-soft: var(--color-line-soft);
+  --line-crisp: var(--color-line-crisp);
+  --muted: var(--color-text-muted);
+  --muted-dark: var(--color-text-dim);
+  --white: var(--color-surface-white);
+  --whatsapp: var(--color-whatsapp);
+  --whatsapp-hover: var(--color-whatsapp-hover);
+}
+
+/* Eradicate default browser focus rings and black boxes across all elements */
+*,
+*:focus,
+*:focus-visible {
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+button,
+button:focus,
+button:focus-visible,
+button:active,
+a,
+a:focus,
+a:focus-visible,
+a:active,
+input,
+input:focus,
+input:focus-visible,
+select,
+select:focus,
+select:focus-visible,
+[role="button"],
+[role="button"]:focus,
+[role="button"]:focus-visible {
+  outline: none !important;
+  box-shadow: none;
+}
+
+/* Custom sleek industrial scrollbars across the application */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F4F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #AAB7D4;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #213EFE;
+}
+
+/* Hide scrollbars cleanly when required */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Base reset: Industrial Hallmark styling - crisp borders & precision */
+* {
+  border-radius: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Explicitly rounded elements: badges, icons, circle buttons */
+.rounded-circle {
+  border-radius: 9999px !important;
+}
+
+.rounded-pill {
+  border-radius: 9999px !important;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--paper);
+  color: var(--navy);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Typography utilities */
+.font-condensed {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+.font-barlow {
+  font-family: 'Barlow', sans-serif;
+}
+
+/* Studio Product Stage for Floating Machines */
+.studio-stage {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.studio-stage-dark {
+  background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Precision Subtle Technical Backgrounds */
+.bg-blueprint-grid {
+  background-color: transparent;
+}
+
+.bg-blueprint-grid-dark {
+  background-color: transparent;
+}
+
+/* Hallmark / Impeccable Primary Button */
+.btn-primary {
+  background-color: var(--blue);
+  color: #FFFFFF;
+  padding: 12px 24px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 150ms ease;
+  min-height: 44px;
+  cursor: pointer;
+  border: 1px solid var(--blue);
+  user-select: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--blue-hover);
+  border-color: var(--blue-hover);
+  color: #FFFFFF;
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--blue-light);
+  outline-offset: 2px;
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+  padding: 12px 24px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 48px;
+  min-width: 48px;
+  cursor: pointer;
+  user-select: none;
+  background-color: #FFFFFF;
+}
+
+.btn-secondary:hover {
+  background-color: var(--navy);
+  color: #FFFFFF;
+  border-color: var(--navy);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* WhatsApp Industrial Action Button */
+.btn-whatsapp {
+  background-color: var(--whatsapp);
+  color: #FFFFFF;
+  padding: 14px 24px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 48px;
+  cursor: pointer;
+  border: 1.5px solid #1EBE5D;
+  user-select: none;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.btn-whatsapp:hover {
+  background-color: var(--whatsapp-hover);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-whatsapp:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* Nexthezia Refined Form Controls */
+.input-industrial {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--line-crisp);
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-right: 16px;
+  padding-left: 16px;
+  min-height: 48px;
+  color: var(--navy);
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px; /* Anti auto-zoom on iOS */
+  width: 100%;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+  outline: none;
+}
+
+.input-industrial:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(33, 62, 254, 0.15);
+  background-color: #FAFCFF;
+}
+
+.input-industrial::placeholder {
+  color: #8C99B5;
+}
+
+/* Custom Select styling with styled SVG chevron */
+.select-industrial {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #FFFFFF;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1A44' stroke-width='2.5' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 42px;
+  cursor: pointer;
+}
+
+/* Nexthezia Shimmer Skeleton Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #E2E7F3 25%, #F0F4FC 50%, #E2E7F3 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+}
+
+/* Safe area bottom padding for Thumb Zone */
+.safe-bottom-pad {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Smooth Card Hover Elevation */
+.card-industrial {
+  background-color: #FFFFFF;
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 6px rgba(11, 26, 68, 0.04);
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-industrial:hover {
+  border-color: var(--blue);
+  box-shadow: 0 8px 24px rgba(11, 26, 68, 0.1);
+  transform: translateY(-2px);
+}
